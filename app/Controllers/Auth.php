@@ -82,18 +82,26 @@ class Auth extends BaseController
     $email = strtolower(trim($this->request->getPost('email')));
     $password = $this->request->getPost('password');
     $confirm = $this->request->getPost('confirm_password');
-    $first = $this->request->getPost('first_name');
-    $last = $this->request->getPost('last_name');
+    $first = trim((string) $this->request->getPost('first_name'));
+    $last = trim((string) $this->request->getPost('last_name'));
 
     // Validation rules
     $rules = [
+        'first_name' => 'required',
+        'last_name' => 'required',
         'email' => 'required|valid_email',
         'password' => 'required|min_length[6]',
         'confirm_password' => 'matches[password]'
     ];
 
-    if (!$this->validate($rules)) {
-        $session->setFlashdata('error', implode('<br>', $validation->getErrors()));
+    if (!$this->validate($rules, [], [
+        'first_name' => $first,
+        'last_name' => $last,
+        'email' => $email,
+        'password' => $password,
+        'confirm_password' => $confirm
+    ])) {
+        $session->setFlashdata('register_errors', $validation->getErrors());
         return redirect()->back()->withInput();
     }
 
@@ -101,7 +109,9 @@ class Auth extends BaseController
     $exist = $usermodel->where('email', strtoupper($email))->first();
 
     if ($exist) {
-        $session->setFlashdata('error', 'An account with this email already exists.');
+        $session->setFlashdata('register_errors', [
+            'email' => 'An account with this email already exists.'
+        ]);
         return redirect()->back()->withInput();
     }
 
@@ -109,8 +119,8 @@ class Auth extends BaseController
     $data = [
         'email' => strtoupper($email),
         'password' => password_hash($password, PASSWORD_DEFAULT),
-        'first_name' => strtoupper($first),
-        'last_name' => strtoupper($last),
+        'first_name' => mb_strtoupper(mb_substr($first, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($first, 1, null, 'UTF-8'),
+        'last_name' => mb_strtoupper(mb_substr($last, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($last, 1, null, 'UTF-8'),
         'role' => 'customer',
         'status' => 'ACTIVE'
     ];

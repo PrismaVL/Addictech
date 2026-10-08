@@ -40,8 +40,9 @@ body {
 .page-title-bar {
   padding: 2.8rem 2rem 2.2rem;
   text-align: center;
-  background-color: var(--bg);
-  border-bottom: 1px solid var(--border);
+  background-color: var(--bg-form);
+  box-shadow: none;
+  border-bottom: none;
   position: relative;
   z-index: 5;
 }
@@ -54,10 +55,41 @@ body {
   color: var(--text);
 }
 
+.login-required-notification {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: min(90vw, 380px);
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(200, 198, 190, 0.7);
+  background: rgba(232, 230, 223, 0.82);
+  color: var(--text);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(8px);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+}
+
+.login-required-notification button {
+  flex: 0 0 auto;
+  padding: 0 0.2rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
 /* ── Form Section ── */
 .form-section {
   background-color: var(--bg-form);
-  padding: 3rem 2rem 0;
+  padding: 0 2rem;
   position: relative;
   z-index: 4;
 }

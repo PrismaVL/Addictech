@@ -94,7 +94,7 @@ class Home extends BaseController
     {
     $session = session();
     if (!$session->get('isLoggedIn')) {
-        return redirect()->to('login')->with('error', 'Please login first.');
+        return redirect()->to('login')->with('wishlist_login_required', true);
     }
 
     $wishlistModel = model('Wishlists_model');

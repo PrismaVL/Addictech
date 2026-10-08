@@ -11,7 +11,7 @@ class Cart extends BaseController
     {
         $session = session();
         if (!$session->get('isLoggedIn')) {
-            return redirect()->to('login')->with('error', 'Please login first.');
+            return redirect()->to('login')->with('cart_login_required', true);
         }
 
         $cartModel  = model('CartItemModel');

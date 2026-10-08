@@ -40,8 +40,9 @@ body {
 .page-title-bar {
   padding: 2.8rem 2rem 2.2rem;
   text-align: center;
-  background-color: var(--bg);
-  border-bottom: 1px solid var(--border);
+  background-color: var(--bg-form);
+  box-shadow: none;
+  border-bottom: none;
   position: relative;
   z-index: 5;
 }
@@ -80,7 +81,7 @@ body {
 /* ── Form Section ── */
 .form-section {
   background-color: var(--bg-form);
-  padding: 3rem 2rem 0;
+  padding: 0 2rem;
   position: relative;
   z-index: 4;
 }
@@ -97,6 +98,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  position: relative;
 }
 
 .field-label {
@@ -122,6 +124,51 @@ body {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+.password-input-wrap {
+  position: relative;
+}
+
+.password-input-wrap .field-input {
+  padding-right: 3rem;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.85rem;
+  display: grid;
+  place-items: center;
+  padding: 0.2rem;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.password-toggle:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.password-toggle-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.password-toggle-slash {
+  display: none;
+}
+
+.password-toggle.is-visible .password-toggle-slash {
+  display: block;
+}
+
 .field-input::placeholder {
   font-family: var(--font-input);
   color: #aaa9a0;
@@ -139,6 +186,24 @@ body {
   font-size: 0.68rem;
   color: var(--text-muted);
   letter-spacing: 0.04em;
+}
+
+.field-error {
+  position: absolute;
+  top: calc(100% + 0.2rem);
+  left: 0;
+  z-index: 1;
+  max-width: 100%;
+  margin: 0;
+  color: #c0392b;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.field-error[hidden] {
+  display: none;
 }
 
 /* ── Auth Error ── */

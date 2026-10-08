@@ -1,5 +1,10 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
+<?php
+  $loginError = session()->getFlashdata('error');
+  $wishlistLoginRequired = session()->getFlashdata('wishlist_login_required');
+  $cartLoginRequired = session()->getFlashdata('cart_login_required');
+?>
 <head>
   <title>addictech – Login</title>
   <link rel="stylesheet" href="<?= base_url('/public/css/login.css') ?>" />
@@ -11,14 +16,21 @@
     <h1 class="page-title">LOGIN</h1>
   </div>
 
-  <?php if (session()->getFlashdata('error')) : ?>
+  <?php if ($loginError && $loginError !== 'Please login first.') : ?>
     <div class="flash flash-error">
-      <?= session()->getFlashdata('error') ?>
+      <?= esc($loginError) ?>
     </div>
   <?php endif; ?>
   <?php if (session()->getFlashdata('success')) : ?>
     <div class="flash flash-success">
       <?= session()->getFlashdata('success') ?>
+    </div>
+  <?php endif; ?>
+
+  <?php if ($wishlistLoginRequired || $cartLoginRequired): ?>
+    <div class="login-required-notification" id="loginRequiredNotification" role="status" aria-live="polite">
+      <span>Please login first to view your <?= $cartLoginRequired ? 'cart' : 'wishlist' ?>.</span>
+      <button type="button" id="closeLoginRequiredNotification" aria-label="Dismiss notification">&times;</button>
     </div>
   <?php endif; ?>
 
