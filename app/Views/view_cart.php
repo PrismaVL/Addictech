@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 <head>
   <title>addictech – Cart</title>
-  <link rel="stylesheet" href="<?= base_url('/public/css/cart.css') ?>" />
+  <link rel="stylesheet" href="<?= base_url('/public/css/cart.css') ?>?v=<?= filemtime(FCPATH . 'public/css/cart.css') ?>" />
 </head>
 
 <?php
@@ -10,6 +10,7 @@ $cart_items = $cart_items ?? [];
 $total      = $total ?? 0;
 ?>
 
+<main class="cart-page">
 <?php if (session()->getFlashdata('success')) : ?>
   <div class="cart-alert cart-alert-success">
     <?= session()->getFlashdata('success') ?>
@@ -22,8 +23,18 @@ $total      = $total ?? 0;
   </div>
 <?php endif; ?>
 
-<div class="cart-title-bar">
-  <h1 class="cart-title">CART</h1>
+<header class="cart-title-bar">
+  <div>
+    <p class="cart-eyebrow">Review your selection</p>
+    <h1 class="cart-title">YOUR CART</h1>
+    <p class="cart-subtitle">Check your items and quantities before checkout.</p>
+  </div>
+  <a href="<?= base_url('catalog') ?>" class="cart-continue-link">CONTINUE SHOPPING <span aria-hidden="true">→</span></a>
+</header>
+
+<div class="cart-items-heading">
+  <h2>Your items</h2>
+  <span><?= count($cart_items) ?> <?= count($cart_items) === 1 ? 'item' : 'items' ?></span>
 </div>
 
 <div class="cart-body">
@@ -53,14 +64,17 @@ $total      = $total ?? 0;
           <div class="item-details">
             <div class="item-top-row">
               <p class="item-name"><?= esc($item['name']) ?></p>
-              <a href="<?= base_url('cart/remove/' . $item['id']) ?>" class="item-remove" aria-label="Remove">
+              <a href="<?= base_url('cart/remove/' . $item['id']) ?>" class="item-remove" aria-label="Remove <?= esc($item['name']) ?> from cart" title="Remove item">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="18" y1="6" x2="6" y2="18"/>
                   <line x1="6" y1="6" x2="18" y2="18"/>
                 </svg>
               </a>
             </div>
-            <p class="item-price">₱<?= number_format($item['price']) ?></p>
+            <div class="item-price-row">
+              <p class="item-price">₱<?= number_format($item['price']) ?> <span>each</span></p>
+              <p class="item-line-total">₱<?= number_format($item['price'] * $item['quantity']) ?></p>
+            </div>
             <div class="item-tags">
               <span class="item-tag"><?= esc($item['category']) ?></span>
               <?php if (!empty($item['variant'])) : ?>
@@ -73,17 +87,17 @@ $total      = $total ?? 0;
                 <form method="POST" action="<?= base_url('cart/update/' . $item['id']) ?>" style="display:inline">
                   <?= csrf_field() ?>
                   <button type="submit" name="quantity" value="<?= $item['quantity'] - 1 ?>"
-                          class="item-qty-btn qty-minus" <?= $item['quantity'] <= 1 ? 'disabled' : '' ?>>
+                          class="item-qty-btn qty-minus" aria-label="Decrease <?= esc($item['name']) ?> quantity" <?= $item['quantity'] <= 1 ? 'disabled' : '' ?>>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                       <circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/>
                     </svg>
                   </button>
                 </form>
-                <span class="item-qty-val"><?= $item['quantity'] ?></span>
+                <span class="item-qty-val" aria-live="polite"><?= $item['quantity'] ?></span>
                 <form method="POST" action="<?= base_url('cart/update/' . $item['id']) ?>" style="display:inline">
                   <?= csrf_field() ?>
                   <button type="submit" name="quantity" value="<?= $item['quantity'] + 1 ?>"
-                          class="item-qty-btn qty-plus">
+                          class="item-qty-btn qty-plus" aria-label="Increase <?= esc($item['name']) ?> quantity">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                       <circle cx="12" cy="12" r="10"/>
                       <line x1="12" y1="8" x2="12" y2="16"/>
@@ -101,7 +115,8 @@ $total      = $total ?? 0;
 
   </div>
 
-  <aside class="cart-summary">
+  <aside class="cart-summary" aria-labelledby="cartSummaryTitle">
+    <h2 class="summary-title" id="cartSummaryTitle">ORDER SUMMARY</h2>
     <div class="summary-note-section">
       <label class="summary-label" for="orderNote">Add Note to your Order</label>
       <textarea class="summary-note" id="orderNote" placeholder="Any special instructions…"></textarea>
@@ -128,5 +143,6 @@ $total      = $total ?? 0;
     <?php endif; ?>
   </aside>
 </div>
+</main>
 
 <?= $this->endSection() ?>
