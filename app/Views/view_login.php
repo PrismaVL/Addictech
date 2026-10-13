@@ -2,6 +2,7 @@
 <?= $this->section('content') ?>
 <?php
   $loginError = session()->getFlashdata('error');
+  $loginFailed = $loginError && $loginError !== 'Please login first.';
   $wishlistLoginRequired = session()->getFlashdata('wishlist_login_required');
   $cartLoginRequired = session()->getFlashdata('cart_login_required');
 ?>
@@ -16,20 +17,17 @@
     <h1 class="page-title">LOGIN</h1>
   </div>
 
-  <?php if ($loginError && $loginError !== 'Please login first.') : ?>
-    <div class="flash flash-error" role="alert" aria-live="assertive">
-      <?= esc($loginError) ?>
-    </div>
-  <?php endif; ?>
   <?php if (session()->getFlashdata('success')) : ?>
     <div class="flash flash-success">
       <?= session()->getFlashdata('success') ?>
     </div>
   <?php endif; ?>
 
-  <?php if ($wishlistLoginRequired || $cartLoginRequired): ?>
-    <div class="login-required-notification" id="loginRequiredNotification" role="status" aria-live="polite">
-      <span>Please login first to view your <?= $cartLoginRequired ? 'cart' : 'wishlist' ?>.</span>
+  <?php if ($loginFailed || $wishlistLoginRequired || $cartLoginRequired): ?>
+    <div class="login-required-notification" id="loginRequiredNotification"
+         role="<?= $loginFailed ? 'alert' : 'status' ?>"
+         aria-live="<?= $loginFailed ? 'assertive' : 'polite' ?>">
+      <span><?= esc($loginFailed ? $loginError : 'Please login first to view your ' . ($cartLoginRequired ? 'cart' : 'wishlist') . '.') ?></span>
     </div>
   <?php endif; ?>
 
