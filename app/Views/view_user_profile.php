@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 <head>
   <title>addictech – User Profile</title>
-  <link rel="stylesheet" href="<?= base_url('/public/css/user_profile.css') ?>" />
+  <link rel="stylesheet" href="<?= base_url('/public/css/user_profile.css') ?>?v=<?= filemtime(FCPATH . 'public/css/user_profile.css') ?>" />
 </head>
 
 <?php
@@ -11,6 +11,11 @@ $total_count     = count($orders);
 $pending_count   = count(array_filter($orders, fn($o) => $o['status'] === 'pending'));
 $completed_count = count(array_filter($orders, fn($o) => $o['status'] === 'delivered'));
 $cancelled_count = count(array_filter($orders, fn($o) => $o['status'] === 'cancelled'));
+$profileNeedsCompletion = empty($user['phone'])
+  || empty($user['address'])
+  || empty($user['city'])
+  || empty($user['postal_code'])
+  || empty($user['country']);
 ?>
 
 <main class="account-main">
@@ -41,8 +46,9 @@ $cancelled_count = count(array_filter($orders, fn($o) => $o['status'] === 'cance
 
     <div class="account-info">
       <h1 class="account-greeting">
-        WASSUP <?= strtoupper($user['first_name'] ?: explode('@', $user['email'])[0]) ?>!
+        WELCOME BACK, <?= strtoupper(esc($user['first_name'] ?: explode('@', $user['email'])[0])) ?>
       </h1>
+      <p class="account-intro">Manage your account details and keep track of your orders.</p>
 
       <div class="info-grid">
         <div class="info-row">
@@ -72,33 +78,59 @@ $cancelled_count = count(array_filter($orders, fn($o) => $o['status'] === 'cance
           </span>
         </div>
       </div>
+      <?php if ($profileNeedsCompletion) : ?>
+        <div class="profile-completion">
+          <div>
+            <p class="profile-completion-title">COMPLETE YOUR PROFILE</p>
+            <p class="profile-completion-copy">Add your contact and delivery details for a smoother checkout.</p>
+          </div>
+          <button type="button" class="profile-completion-link" onclick="openAccountSettings()">
+            UPDATE DETAILS <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      <?php endif; ?>
     </div>
   </div>
 
-  <div class="account-tabs">
-    <button class="tab-btn active" id="tabHistory" onclick="switchTab('history')">ORDER HISTORY</button>
-    <button class="tab-btn" id="tabSettings" onclick="switchTab('settings')">ACCOUNT SETTINGS</button>
+  <div class="account-tabs" role="tablist" aria-label="Account sections">
+    <button class="tab-btn active" id="tabHistory" type="button" role="tab" aria-selected="true" aria-controls="panelHistory" onclick="switchTab('history')">ORDER HISTORY</button>
+    <button class="tab-btn" id="tabSettings" type="button" role="tab" aria-selected="false" aria-controls="panelSettings" onclick="switchTab('settings')">ACCOUNT SETTINGS</button>
   </div>
 
 <!-- ORDER HISTORY TAB -->
-  <div class="tab-panel" id="panelHistory">
+  <div class="tab-panel" id="panelHistory" role="tabpanel" aria-labelledby="tabHistory">
+    <?php if (empty($orders)) : ?>
+      <div class="orders-empty-state">
+        <div class="orders-empty-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M8 17.5h32l-2.7 22H10.7L8 17.5Z" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M17 18v-4a7 7 0 0 1 14 0v4" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M19 27h10" stroke="currentColor" stroke-width="1.6"/>
+          </svg>
+        </div>
+        <p class="orders-empty-eyebrow">ORDER HISTORY</p>
+        <h2 class="orders-empty-title">Your next favorite setup starts here.</h2>
+        <p class="orders-empty-copy">Once you place an order, you can track its status and find its details here.</p>
+        <a class="orders-empty-cta" href="<?= base_url('catalog') ?>">EXPLORE THE CATALOG <span aria-hidden="true">→</span></a>
+      </div>
+    <?php else : ?>
     <div class="orders-toolbar">
       <div class="order-filters" id="orderFilters">
-        <button class="order-filter active" data-filter="all" onclick="filterOrders(this)">
+        <button class="order-filter active" type="button" data-filter="all" aria-pressed="true" onclick="filterOrders(this)">
           ALL ORDERS <span class="filter-count">(<?= $total_count ?>)</span>
         </button>
-        <button class="order-filter" data-filter="pending" onclick="filterOrders(this)">
+        <button class="order-filter" type="button" data-filter="pending" aria-pressed="false" onclick="filterOrders(this)">
           PENDING <span class="filter-count">(<?= $pending_count ?>)</span>
         </button>
-        <button class="order-filter" data-filter="delivered" onclick="filterOrders(this)">
+        <button class="order-filter" type="button" data-filter="delivered" aria-pressed="false" onclick="filterOrders(this)">
           COMPLETED <span class="filter-count">(<?= $completed_count ?>)</span>
         </button>
-        <button class="order-filter" data-filter="cancelled" onclick="filterOrders(this)">
+        <button class="order-filter" type="button" data-filter="cancelled" aria-pressed="false" onclick="filterOrders(this)">
           CANCELLED <span class="filter-count">(<?= $cancelled_count ?>)</span>
         </button>
       </div>
       <div class="order-search-wrap">
-        <input type="text" class="order-search" placeholder="SEARCH" id="orderSearch" onkeyup="renderOrders()"/>
+        <input type="search" class="order-search" placeholder="SEARCH" aria-label="Search orders" id="orderSearch" oninput="renderOrders()"/>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
@@ -113,14 +145,6 @@ $cancelled_count = count(array_filter($orders, fn($o) => $o['status'] === 'cance
         <span>TOTAL</span>
       </div>
       <div class="orders-tbody" id="ordersBody">
-        <?php if (empty($orders)) : ?>
-          <div class="orders-empty">
-            You have no orders yet.
-            <a href="<?= base_url('catalog') ?>" style="color:var(--text);text-decoration:underline">
-              Start shopping →
-            </a>
-          </div>
-        <?php else : ?>
           <?php foreach ($orders as $i => $order) : ?>
             <?php
               $firstItem   = !empty($order['items']) ? $order['items'][0] : null;
@@ -212,13 +236,13 @@ $cancelled_count = count(array_filter($orders, fn($o) => $o['status'] === 'cance
             </div>
 
           <?php endforeach; ?>
-        <?php endif; ?>
       </div>
     </div>
+    <?php endif; ?>
   </div>
 
   <!-- ACCOUNT SETTINGS TAB -->
-  <div class="tab-panel hidden" id="panelSettings">
+  <div class="tab-panel hidden" id="panelSettings" role="tabpanel" aria-labelledby="tabSettings">
     <div class="settings-header">
       <p class="settings-title">SETTINGS</p>
       <p class="settings-sub">KEEP YOUR ACCOUNT DETAILS UP TO DATE.</p>
@@ -249,8 +273,16 @@ $cancelled_count = count(array_filter($orders, fn($o) => $o['status'] === 'cance
             <p class="profile-field-val"><?= esc($user['last_name'] ?: '—') ?></p>
           </div>
           <div class="profile-field">
+            <p class="profile-field-label">CITY</p>
+            <p class="profile-field-val"><?= esc(($user['city'] ?? '') ?: '—') ?></p>
+          </div>
+          <div class="profile-field">
+            <p class="profile-field-label">PHONE NUMBER</p>
+            <p class="profile-field-val"><?= esc(($user['phone'] ?? '') ?: '—') ?></p>
+          </div>
+          <div class="profile-field">
             <p class="profile-field-label">COUNTRY</p>
-            <p class="profile-field-val"><?= esc($user['country'] ?: '—') ?></p>
+            <p class="profile-field-val">Philippines</p>
           </div>
           <div class="profile-field">
             <p class="profile-field-label">POSTAL CODE</p>
@@ -283,41 +315,40 @@ $cancelled_count = count(array_filter($orders, fn($o) => $o['status'] === 'cance
             <div class="profile-field">
               <p class="profile-field-label">FIRST NAME</p>
               <input class="settings-input" name="first_name" type="text"
-                     value="<?= esc($user['first_name'] ?? '') ?>"/>
+                     value="<?= esc($user['first_name'] ?? '') ?>" placeholder="John"/>
             </div>
             <div class="profile-field">
               <p class="profile-field-label">LAST NAME</p>
               <input class="settings-input" name="last_name" type="text"
-                     value="<?= esc($user['last_name'] ?? '') ?>"/>
+                     value="<?= esc($user['last_name'] ?? '') ?>" placeholder="Doe"/>
+            </div>
+            <div class="profile-field">
+              <p class="profile-field-label">CITY</p>
+              <input class="settings-input" name="city" type="text"
+                     value="<?= esc($user['city'] ?? '') ?>" placeholder="Sampaloc"/>
+            </div>
+            <div class="profile-field">
+              <p class="profile-field-label">PHONE NUMBER</p>
+              <input class="settings-input" name="phone" type="tel"
+                     value="<?= esc(old('phone', $user['phone'] ?? '')) ?>" placeholder="09250652012"
+                     inputmode="numeric" maxlength="11" pattern="09[0-9]{9}"
+                     title="Enter an 11-digit Philippine mobile number starting with 09."/>
             </div>
             <div class="profile-field">
               <p class="profile-field-label">COUNTRY</p>
-              <input class="settings-input" name="country" type="text"
-                     value="<?= esc($user['country'] ?? 'Philippines') ?>"/>
+              <input class="settings-input" name="country" type="text" value="Philippines" readonly aria-readonly="true"/>
             </div>
             <div class="profile-field">
               <p class="profile-field-label">POSTAL CODE</p>
               <input class="settings-input" name="postal_code" type="text"
-                     value="<?= esc($user['postal_code'] ?? '') ?>"/>
+                     value="<?= esc($user['postal_code'] ?? '') ?>" placeholder="1523"/>
             </div>
           </div>
 
           <div class="profile-address-row">
             <p class="profile-field-label">ADDRESS</p>
             <input class="settings-input" name="address" type="text" style="width:100%"
-                   value="<?= esc($user['address'] ?? '') ?>"/>
-          </div>
-
-          <div class="profile-field">
-            <p class="profile-field-label">CITY</p>
-            <input class="settings-input" name="city" type="text"
-                   value="<?= esc($user['city'] ?? '') ?>"/>
-          </div>
-
-          <div class="profile-field">
-            <p class="profile-field-label">PHONE NUMBER</p>
-            <input class="settings-input" name="phone" type="tel"
-                   value="<?= esc($user['phone'] ?? '') ?>"/>
+                   value="<?= esc($user['address'] ?? '') ?>" placeholder="Random street with random number in Sampaloc"/>
           </div>
 
           <div class="edit-actions">
@@ -360,6 +391,6 @@ $cancelled_count = count(array_filter($orders, fn($o) => $o['status'] === 'cance
 
 <div class="acct-toast" id="acctToast"></div>
 
-<script src="<?= base_url('/public/js/user_profile.js') ?>"></script>
+<script src="<?= base_url('/public/js/user_profile.js') ?>?v=<?= filemtime(FCPATH . 'public/js/user_profile.js') ?>"></script>
 
 <?= $this->endSection() ?>

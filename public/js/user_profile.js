@@ -14,6 +14,13 @@
       document.getElementById('panelSettings').classList.toggle('hidden', tab !== 'settings');
       document.getElementById('tabHistory').classList.toggle('active', tab === 'history');
       document.getElementById('tabSettings').classList.toggle('active', tab === 'settings');
+      document.getElementById('tabHistory').setAttribute('aria-selected', String(tab === 'history'));
+      document.getElementById('tabSettings').setAttribute('aria-selected', String(tab === 'settings'));
+    }
+
+    function openAccountSettings() {
+      switchTab('settings');
+      document.getElementById('panelSettings').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     /* ──────────────────────────────────────
@@ -22,14 +29,21 @@
     let orderFilter = 'all';
 
     function filterOrders(btn) {
-      document.querySelectorAll('.order-filter').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.order-filter').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
       btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
       orderFilter = btn.dataset.filter;
       renderOrders();
     }
 
     function renderOrders() {
-      const searchTerm = (document.getElementById('orderSearch').value || '').toLowerCase();
+      const searchInput = document.getElementById('orderSearch');
+      if (!searchInput) return;
+
+      const searchTerm = (searchInput.value || '').toLowerCase();
       const rows = document.querySelectorAll('.orders-row');
       let visibleCount = 0;
 
@@ -77,6 +91,61 @@
       document.getElementById('profileView').classList.remove('hidden');
       document.getElementById('profileEdit').classList.add('hidden');
     }
+
+    function capitalizeFirstLetter(input) {
+      const value = input.value;
+      const match = value.match(/^(\s*)(\S)/u);
+      if (!match) return;
+
+      const capitalized = match[1] + match[2].toLocaleUpperCase() + value.slice(match[0].length);
+      if (capitalized === value) return;
+
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      const lengthChange = capitalized.length - value.length;
+      input.value = capitalized;
+
+      if (start !== null && end !== null) {
+        input.setSelectionRange(
+          start > match[0].length ? start + lengthChange : start,
+          end > match[0].length ? end + lengthChange : end
+        );
+      }
+    }
+
+    document.querySelectorAll(
+      '#profileEdit [name="first_name"], #profileEdit [name="last_name"], ' +
+      '#profileEdit [name="city"], #profileEdit [name="country"], #profileEdit [name="address"]'
+    ).forEach(input => {
+      capitalizeFirstLetter(input);
+      input.addEventListener('input', () => capitalizeFirstLetter(input));
+    });
+
+    const profileForm = document.querySelector('#profileEdit form');
+    const countryInput = profileForm?.querySelector('[name="country"]');
+    const phoneInput = profileForm?.querySelector('[name="phone"]');
+
+    function normalizePhilippinePhone() {
+      if (!phoneInput || countryInput?.value.trim().toLocaleLowerCase() !== 'philippines') return;
+
+      let digits = phoneInput.value.replace(/\D/g, '');
+      if (!digits) return;
+
+      if (digits.startsWith('63')) digits = digits.slice(2);
+      if (digits.startsWith('09')) {
+        phoneInput.value = digits;
+      } else if (digits.startsWith('9')) {
+        phoneInput.value = `0${digits}`;
+      } else if (digits.startsWith('0')) {
+        phoneInput.value = `09${digits.slice(1)}`;
+      } else {
+        phoneInput.value = `09${digits}`;
+      }
+    }
+
+    phoneInput?.addEventListener('blur', normalizePhilippinePhone);
+    countryInput?.addEventListener('change', normalizePhilippinePhone);
+    profileForm?.addEventListener('submit', normalizePhilippinePhone);
 
     /* ──────────────────────────────────────
        PASSWORD CARD

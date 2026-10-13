@@ -66,34 +66,88 @@ class Users extends BaseController
         $usermodel = model('Users_model');
         $session = session();
         $user = $usermodel->find($id);
-        
-        //add email, postal, other stuff
-        $data = [
-        'first_name'  => $this->request->getPost('first_name'),
-        'last_name'   => $this->request->getPost('last_name'),
-        'country'     => $this->request->getPost('country'),
-        'city'        => $this->request->getPost('city'),
-        'postal_code' => $this->request->getPost('postal_code'),
-        'address'     => $this->request->getPost('address'),
-        'phone'       => $this->request->getPost('phone'),
-        'role'        => $this->request->getPost('role'),
-        'status'      => $this->request->getPost('status'),
-        ];
-
-        // Update session if the user is editing their own profile
-        if ($session->get('user_id') == $id) {
-            $session->set($data);
+        if (!$user) {
+            return redirect()->to('admin/users')->with('error', 'User not found.');
         }
 
         $redirectTo = $this->request->getPost('redirect_to') ?? 'user/profile';
+        $postData = $this->request->getPost();
+        $profileFields = [
+            'first_name',
+            'last_name',
+            'country',
+            'city',
+            'postal_code',
+            'address',
+            'phone',
+        ];
+        $data = [];
 
-        $existemail = $usermodel->where('email', $data['email'])->first();
-        if ($existemail && $existemail['id'] != $id){ //if the user exists and if that user isnt equal to the one u r editing
-            $session->setFlashData('error', 'email already used');
-            return redirect()->to($redirectTo);
+        foreach ($profileFields as $field) {
+            if (array_key_exists($field, $postData)) {
+                $data[$field] = $postData[$field];
+            }
         }
 
-        $usermodel->update($id, $data);
+        $isEditingOwnProfile = (string) $session->get('user_id') === (string) $id;
+        if ($isEditingOwnProfile) {
+            $data['country'] = 'Philippines';
+        }
+
+        foreach (['first_name', 'last_name', 'city', 'country', 'address'] as $field) {
+            if (isset($data[$field]) && is_string($data[$field])) {
+                $data[$field] = preg_replace_callback(
+                    '/^(\s*)(\S)/u',
+                    static fn(array $match): string => $match[1] . mb_strtoupper($match[2], 'UTF-8'),
+                    $data[$field],
+                    1
+                );
+            }
+        }
+
+        if (
+            $isEditingOwnProfile
+            && isset($data['phone'])
+            && trim((string) $data['phone']) !== ''
+        ) {
+            $digits = preg_replace('/\D+/', '', (string) $data['phone']);
+            if (str_starts_with($digits, '63')) {
+                $digits = substr($digits, 2);
+            }
+            if (str_starts_with($digits, '9')) {
+                $digits = '0' . $digits;
+            } elseif (str_starts_with($digits, '0') && !str_starts_with($digits, '09')) {
+                $digits = '09' . substr($digits, 1);
+            } elseif (!str_starts_with($digits, '09')) {
+                $digits = '09' . $digits;
+            }
+
+            if (!preg_match('/^09\d{9}$/', $digits)) {
+                return redirect()
+                    ->to($redirectTo)
+                    ->with('error', 'Enter an 11-digit Philippine mobile number starting with 09.')
+                    ->withInput();
+            }
+
+            $data['phone'] = $digits;
+        }
+
+        if (!$isEditingOwnProfile) {
+            foreach (['role', 'status'] as $field) {
+                if (array_key_exists($field, $postData)) {
+                    $data[$field] = $postData[$field];
+                }
+            }
+        }
+
+        if (!empty($data)) {
+            $usermodel->update($id, $data);
+        }
+
+        if ($isEditingOwnProfile) {
+            $session->set(array_intersect_key($data, array_flip($profileFields)));
+        }
+
         $session->setFlashData('success', 'User updated successfully.');
         return redirect()->to($redirectTo);
     }
