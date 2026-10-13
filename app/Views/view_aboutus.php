@@ -6,7 +6,8 @@
 </head>
 <body>
 
-<main class="about-container">
+<main class="about-page">
+<div class="about-container">
   <header class="about-header">
     <p class="about-eyebrow">WHO WE ARE</p>
     <h1 class="about-title">Built by a team that cares about the details.</h1>
@@ -141,8 +142,29 @@
       <li>
         <span class="improvement-number">04</span>
         <div>
-          <h3>Responsive About page</h3>
-          <p>Redesigned the team presentation, added this website overview, and documented the interface improvements for portfolio credit.</p>
+          <h3>Catalog and wishlist browsing</h3>
+          <p>Added clearer search, category filters, sorting, result counts, empty-result messages, randomized default product order, and responsive product layouts.</p>
+        </div>
+      </li>
+      <li>
+        <span class="improvement-number">05</span>
+        <div>
+          <h3>A clearer shopping cart</h3>
+          <p>Refined the cart layout with item counts, per-item totals, accessible quantity controls, clearer removal actions, and a more visible order summary.</p>
+        </div>
+      </li>
+      <li>
+        <span class="improvement-number">06</span>
+        <div>
+          <h3>Simplified checkout form</h3>
+          <p>Removed decorative asterisks from required fields while keeping required-field validation, and clearly labeled order notes as optional.</p>
+        </div>
+      </li>
+      <li>
+        <span class="improvement-number">07</span>
+        <div>
+          <h3>Consistent page backgrounds</h3>
+          <p>Fixed background coverage on the cart and About pages so content sections flow together without distracting color breaks.</p>
         </div>
       </li>
     </ul>
@@ -153,6 +175,7 @@
     <p>To update team portraits, replace the corresponding image in <code>/public/images/</code>.</p>
   </div>
   <?php endif; ?>
+</div>
 </main>
 
 </body>

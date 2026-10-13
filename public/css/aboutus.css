@@ -10,6 +10,11 @@ body {
   font-family: var(--font-input);
 }
 
+.about-page {
+  min-height: calc(100vh - 72px);
+  background: #e8e4da;
+}
+
 .about-container {
   width: min(1120px, calc(100% - 3rem));
   margin: 0 auto;
