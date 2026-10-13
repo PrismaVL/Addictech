@@ -188,6 +188,6 @@ $products_json = json_encode(array_map(function($p) {
 
   function isWishlisted(id) { return wishlistIds.has(id); }
 </script>
-<script src="<?= base_url('/public/js/catalog.js') ?>"></script>
+<script src="<?= base_url('/public/js/catalog.js') ?>?v=<?= filemtime(FCPATH . 'public/js/catalog.js') ?>"></script>
 
 <?= $this->endSection() ?>
