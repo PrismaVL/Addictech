@@ -55,6 +55,38 @@ function applyFilters() {
     });
     visible.forEach(function(card) { grid.appendChild(card); });
   }
+
+  const resultCount = document.getElementById('catalogResultCount');
+  const currentCategory = document.getElementById('catalogCurrentCategory');
+  const emptyMessage = document.getElementById('catalogFilterEmpty');
+  if (resultCount) {
+    resultCount.innerHTML = `Showing <strong>${visible.length}</strong> of <strong>${cards.length}</strong> products`;
+  }
+  if (currentCategory) {
+    const categoryNames = {
+      all: 'All products',
+      keyboard: 'Keyboards',
+      mouse: 'Mice',
+      headset: 'Headsets',
+      monitor: 'Monitors',
+      speaker: 'Speakers',
+      cam: 'Webcams'
+    };
+    currentCategory.textContent = categoryNames[activeFilter.toLowerCase()] || 'All products';
+  }
+  if (emptyMessage) emptyMessage.hidden = visible.length > 0;
+}
+
+function randomizeProductOrder() {
+  const grid = document.getElementById('productGrid');
+  const cards = Array.from(grid.querySelectorAll('.product-card'));
+
+  for (let i = cards.length - 1; i > 0; i--) {
+    const randomIndex = Math.floor(Math.random() * (i + 1));
+    [cards[i], cards[randomIndex]] = [cards[randomIndex], cards[i]];
+  }
+
+  cards.forEach(function(card) { grid.appendChild(card); });
 }
 
 /* ══════════════════════════════════
@@ -207,8 +239,10 @@ document.querySelectorAll('.tag[data-filter]').forEach(function(btn) {
   btn.addEventListener('click', function() {
     document.querySelectorAll('.tag[data-filter]').forEach(function(b) {
       b.classList.remove('active');
+      b.setAttribute('aria-pressed', 'false');
     });
     btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
     activeFilter = btn.dataset.filter;
     applyFilters();
   });
@@ -216,9 +250,14 @@ document.querySelectorAll('.tag[data-filter]').forEach(function(btn) {
 
 document.getElementById('sortBtn').addEventListener('click', function() {
   sortState = (sortState + 1) % 3;
-  this.textContent = sortState === 1 ? 'Price: Low → High'
-                   : sortState === 2 ? 'Price: High → Low'
-                   : 'Sort By Price';
+  const labels = ['DEFAULT', 'PRICE: LOW TO HIGH ↑', 'PRICE: HIGH TO LOW ↓'];
+  const sortNames = ['random', 'asc', 'desc'];
+  this.textContent = labels[sortState];
+  this.dataset.sort = sortNames[sortState];
+  this.setAttribute('aria-label', sortState === 0
+    ? 'Default product order'
+    : `Sort by price: ${labels[sortState].toLowerCase()}`);
+  if (sortState === 0) randomizeProductOrder();
   applyFilters();
 });
 
@@ -231,15 +270,15 @@ document.getElementById('searchInput').addEventListener('input', function() {
    URL FILTER ON PAGE LOAD
 ══════════════════════════════════ */
 const urlParams = new URLSearchParams(window.location.search);
-const urlFilter = urlParams.get('filter');
+const urlFilter = urlParams.get('category') || urlParams.get('filter');
+
+randomizeProductOrder();
 
 if (urlFilter) {
-  activeFilter = urlFilter.toUpperCase();
-  document.querySelectorAll('.tag[data-filter]').forEach(function(btn) {
-    btn.classList.remove('active');
-    if (btn.dataset.filter.toUpperCase() === activeFilter) {
-      btn.classList.add('active');
-    }
-  });
+  const matchingFilter = Array.from(document.querySelectorAll('.tag[data-filter]'))
+    .find(btn => btn.dataset.filter.toLowerCase() === urlFilter.toLowerCase());
+  if (matchingFilter) matchingFilter.click();
+  else applyFilters();
+} else {
   applyFilters();
 }

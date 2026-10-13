@@ -47,30 +47,38 @@ $products_json = json_encode(array_map(function($p) {
   <?php endif; ?>
 
 
-  <div class="wishlist-header-top">
-      <h1 class="wishlist-title">CATALOG</h1>
+  <header class="catalog-header">
+    <div class="catalog-heading-row">
+      <div>
+        <p class="catalog-eyebrow">Find your setup</p>
+        <h1 class="wishlist-title">CATALOG</h1>
+      </div>
+      <label class="search-wrap" for="searchInput">
+        <input type="search" class="search-input" placeholder="SEARCH PRODUCTS" id="searchInput" autocomplete="off" />
+        <span class="search-icon-btn" aria-hidden="true">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </span>
+      </label>
     </div>
-
-  <div class="catalog-toolbar">
-    <div class="search-wrap">
-      <input type="text" class="search-input" placeholder="SEARCH" id="searchInput" />
-      <button class="search-icon-btn" aria-label="Search">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-      </button>
+    <div class="catalog-toolbar">
+      <div class="filter-tags" role="group" aria-label="Filter products by category">
+        <button type="button" class="tag active" data-filter="all" aria-pressed="true">ALL</button>
+        <button type="button" class="tag" data-filter="KEYBOARD" aria-pressed="false">KEYBOARD</button>
+        <button type="button" class="tag" data-filter="MOUSE" aria-pressed="false">MOUSE</button>
+        <button type="button" class="tag" data-filter="HEADSET" aria-pressed="false">HEADSET</button>
+        <button type="button" class="tag" data-filter="MONITOR" aria-pressed="false">MONITOR</button>
+        <button type="button" class="tag" data-filter="SPEAKER" aria-pressed="false">SPEAKER</button>
+        <button type="button" class="tag" data-filter="cam" aria-pressed="false">WEB CAM</button>
+      </div>
+      <button type="button" class="tag sort-btn" id="sortBtn" data-sort="random" aria-label="Default product order">DEFAULT</button>
     </div>
-    <div class="filter-tags">
-      <button class="tag active" data-filter="all">ALL</button>
-      <button class="tag" data-filter="KEYBOARD">KEYBOARD</button>
-      <button class="tag" data-filter="MOUSE">MOUSE</button>
-      <button class="tag" data-filter="HEADSET">HEADSET</button>
-      <button class="tag" data-filter="MONITOR">MONITOR</button>
-      <button class="tag" data-filter="SPEAKER">SPEAKER</button>
-      <button class="tag" data-filter="cam">WEB CAM</button>
-      <button class="tag sort-btn" id="sortBtn">Sort By Price</button>
+    <div class="catalog-results-summary" role="status" aria-live="polite">
+      <p id="catalogResultCount">Showing <strong><?= count($products) ?></strong> products</p>
+      <p class="catalog-current-filter">Category: <strong id="catalogCurrentCategory">All products</strong></p>
     </div>
-  </div>
+  </header>
 
   <div class="product-grid" id="productGrid">
     <?php if (!empty($products)) : ?>
@@ -97,6 +105,7 @@ $products_json = json_encode(array_map(function($p) {
       <div class="catalog-empty">No products found.</div>
     <?php endif; ?>
   </div>
+  <p class="catalog-filter-empty" id="catalogFilterEmpty" hidden>No products match your search or selected category.</p>
 
   
 </main>
