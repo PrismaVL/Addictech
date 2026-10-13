@@ -30,14 +30,14 @@
           <hr class="section-rule"/>
 
           <div class="form-group">
-            <label class="form-label" for="fullName">Full Name *</label>
+            <label class="form-label" for="fullName">Full Name</label>
             <input type="text" id="fullName" name="full_name" class="form-input"
                    value="<?= esc(old('full_name', trim(($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? '')))) ?>"
                    autocomplete="name" required />
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="address">Address *</label>
+            <label class="form-label" for="address">Address</label>
             <input type="text" id="address" name="delivery_address" class="form-input"
                    value="<?= esc(old('delivery_address', $user['address'] ?? '')) ?>"
                    autocomplete="street-address" required />
@@ -45,13 +45,13 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label" for="postal">Postal Code *</label>
+              <label class="form-label" for="postal">Postal Code</label>
               <input type="text" id="postal" name="postal_code" class="form-input"
                      value="<?= esc(old('postal_code', $user['postal_code'] ?? '')) ?>"
                      autocomplete="postal-code" required />
             </div>
             <div class="form-group">
-              <label class="form-label" for="city">City *</label>
+              <label class="form-label" for="city">City</label>
               <input type="text" id="city" name="city" class="form-input"
                      value="<?= esc(old('city', $user['city'] ?? '')) ?>"
                      autocomplete="address-level2" required />
