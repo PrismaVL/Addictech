@@ -30,7 +30,6 @@
   <?php if ($wishlistLoginRequired || $cartLoginRequired): ?>
     <div class="login-required-notification" id="loginRequiredNotification" role="status" aria-live="polite">
       <span>Please login first to view your <?= $cartLoginRequired ? 'cart' : 'wishlist' ?>.</span>
-      <button type="button" id="closeLoginRequiredNotification" aria-label="Dismiss notification">&times;</button>
     </div>
   <?php endif; ?>
 

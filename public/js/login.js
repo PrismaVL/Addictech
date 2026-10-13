@@ -5,7 +5,6 @@
         loginRequiredNotification.remove();
       };
 
-      document.getElementById('closeLoginRequiredNotification')?.addEventListener('click', dismissNotification);
       window.setTimeout(dismissNotification, 5000);
     }
 
