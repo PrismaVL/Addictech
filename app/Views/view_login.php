@@ -7,7 +7,7 @@
 ?>
 <head>
   <title>addictech – Login</title>
-  <link rel="stylesheet" href="<?= base_url('/public/css/login.css') ?>" />
+  <link rel="stylesheet" href="<?= base_url('/public/css/login.css') ?>?v=<?= filemtime(FCPATH . 'public/css/login.css') ?>" />
 </head>
 
 <body>

@@ -6,7 +6,7 @@
       };
 
       document.getElementById('closeLoginRequiredNotification')?.addEventListener('click', dismissNotification);
-      window.setTimeout(dismissNotification, 6000);
+      window.setTimeout(dismissNotification, 5000);
     }
 
     document.getElementById('loginForm')?.addEventListener('submit', function(e) {
