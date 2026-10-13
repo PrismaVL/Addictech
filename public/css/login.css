@@ -65,7 +65,7 @@ body {
   gap: 1rem;
   max-width: min(90vw, 380px);
   padding: 0.9rem 1rem;
-  border: 1px solid rgba(200, 198, 190, 0.7);
+  border: 1px solid #1a1a18;
   background: rgba(232, 230, 223, 0.82);
   color: var(--text);
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
