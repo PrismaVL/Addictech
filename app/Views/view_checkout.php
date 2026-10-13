@@ -59,6 +59,11 @@
           </div>
 
           <div class="form-group">
+            <label class="form-label" for="country">Country</label>
+            <input type="text" id="country" class="form-input" value="Philippines" readonly aria-readonly="true" />
+          </div>
+
+          <div class="form-group">
             <label class="form-label" for="orderNote">Order Notes (Optional)</label>
             <textarea id="orderNote" name="notes" class="form-input" rows="2"
                       placeholder="Special instructions for delivery..."><?= esc(old('notes')) ?></textarea>
