@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 <head>
   <title>addictech – Products</title>
-  <link rel="stylesheet" href="<?= base_url('/public/css/products.css') ?>" />
+  <link rel="stylesheet" href="<?= base_url('/public/css/products.css') ?>?v=<?= filemtime(FCPATH . 'public/css/products.css') ?>" />
 </head>
 <body>
 

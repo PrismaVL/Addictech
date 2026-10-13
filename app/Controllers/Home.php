@@ -12,20 +12,29 @@ class Home extends BaseController
         // $borrowmodel = model('Borrow_model');
         $userId = session()->get('user_id');
         $productModel = model("Products_Model");
-        $products     = $productModel->where('status', 'active')->findAll();
+        $products     = $productModel->where('status', 'active')
+                                     ->where('stock >', 0)
+                                     ->findAll();
 
         $featured_products = [];
 
         if (!empty($products)) {
             shuffle($products); // randomize order
 
-            $count = 3; // 1 to 3, but not more than total
+            $count = 10; // Show up to 10 randomized active products
             $featured_products = array_slice($products, 0, $count);
+        }
+        $wishlisted_ids = [];
+        if (session()->get('isLoggedIn')) {
+            $wishlistModel  = model('Wishlists_model');
+            $wishlist       = $wishlistModel->getWishlistByUser($userId);
+            $wishlisted_ids = array_map('intval', array_column($wishlist, 'product_id'));
         }
         $data = array(
             'title' => 'TW32 App - View User Record',
             'user' => $usermodel->find($userId),
             'featured_products'=>$featured_products,
+            'wishlisted_ids' => $wishlisted_ids,
         );
 
         // $data2 = array(

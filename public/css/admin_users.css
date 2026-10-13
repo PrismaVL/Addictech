@@ -337,28 +337,51 @@ body {
 
 /* ── Delete Modal — matches products & orders ── */
 .admin-modal-overlay {
-  display: none;
+  display: flex;
+  visibility: hidden;
   position: fixed;
   inset: 0;
+  opacity: 0;
+  pointer-events: none;
   background: rgba(0,0,0,0.5);
   z-index: 100;
   align-items: center;
   justify-content: center;
+  transition: opacity .22s ease, visibility 0s linear .22s;
 }
 
 .admin-modal-overlay.active {
-  display: flex;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition-delay: 0s;
 }
 
 .admin-modal-box {
   background: #f0ece2;
   border: 1.5px solid #c8c3b5;
+  border-radius: 10px;
   padding: 2.5rem 2rem;
   max-width: 420px;
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  opacity: 0;
+  transform: translateY(8px) scale(.99);
+  transition: opacity .22s ease, transform .22s ease;
+}
+
+.admin-modal-overlay.active .admin-modal-box {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-modal-overlay,
+  .admin-modal-box {
+    transition: none;
+  }
 }
 
 .admin-modal-title {

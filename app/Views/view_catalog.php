@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 <head>
   <title>addictech – Catalog</title>
-  <link rel="stylesheet" href="<?= base_url('/public/css/catalog.css') ?>" />
+  <link rel="stylesheet" href="<?= base_url('/public/css/catalog.css') ?>?v=<?= filemtime(FCPATH . 'public/css/catalog.css') ?>" />
 </head>
 
 <?php
@@ -105,10 +105,9 @@ $products_json = json_encode(array_map(function($p) {
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal" id="productModal">
     <button type="button" class="modal-close" id="modalClose" aria-label="Close">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-        <circle cx="12" cy="12" r="10"/>
-        <line x1="15" y1="9" x2="9" y2="15"/>
-        <line x1="9" y1="9" x2="15" y2="15"/>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="6" y1="6" x2="18" y2="18"/>
+        <line x1="18" y1="6" x2="6" y2="18"/>
       </svg>
     </button>
 

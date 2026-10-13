@@ -378,16 +378,26 @@ body {
 
 /* Modal overlay */
 .modal {
-  display: none;
+  display: block;
+  visibility: hidden;
   position: fixed;
   z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
+  opacity: 0;
+  pointer-events: none;
   background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(3px);
-  animation: fadeIn 0.2s ease-out;
+  transition: opacity .22s ease, visibility 0s linear .22s;
+}
+
+.modal.open {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition-delay: 0s;
 }
 
 /* Modal content box */
@@ -397,9 +407,16 @@ body {
   border: 1.5px solid #c8c3b5;
   width: 90%;
   max-width: 650px;
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-  animation: slideIn 0.3s ease-out;
+  opacity: 0;
+  transform: translateY(-12px);
+  transition: opacity .22s ease, transform .22s ease;
+}
+
+.modal.open .modal-content {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Modal header */
@@ -531,24 +548,10 @@ body {
   color: #e8e4da;
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(-50px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+@media (prefers-reduced-motion: reduce) {
+  .modal,
+  .modal-content {
+    transition: none;
   }
 }
 

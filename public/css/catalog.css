@@ -192,9 +192,12 @@
 }
 
 .modal-backdrop {
-  display: none;
+  display: flex;
+  visibility: hidden;
   position: fixed;
   inset: 0;
+  opacity: 0;
+  pointer-events: none;
   background: rgba(0,0,0,0.55);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
@@ -202,56 +205,66 @@
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
+  transition: opacity .22s ease, visibility 0s linear .22s;
 }
 
 .modal-backdrop.open {
-  display: flex;
-  animation: fadeIn 0.2s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition-delay: 0s;
 }
 
 .modal {
   background: #2a2a27;
   color: #e8e6df;
+  border-radius: 10px;
   display: flex;
   gap: 2.5rem;
   padding: 2.8rem 2.8rem 2.8rem 2.4rem;
   max-width: 860px;
   width: 100%;
   position: relative;
-  animation: slideUp 0.25s ease;
+  opacity: 0;
+  transform: translateY(12px) scale(.99);
+  transition: opacity .22s ease, transform .22s ease;
   max-height: 90vh;
   overflow-y: auto;
 }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+.modal-backdrop.open .modal {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 .modal-close {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background: #fff;
+  top: 1.1rem;
+  right: 1.1rem;
+  left: auto;
+  padding: 0;
   border: none;
-  border-radius: 50%;
-  width: 34px;
-  height: 34px;
+  background: transparent;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #1a1a18;
-  transition: background 0.2s;
+  color: #e8e6df;
+  transition: color 0.2s, transform 0.2s;
   flex-shrink: 0;
 }
 
-.modal-close:hover { background: #ddd; }
+.modal-close:hover {
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.modal-close:focus-visible {
+  outline: 1px solid #e8e6df;
+  outline-offset: 3px;
+}
 
 .modal-left {
   display: flex;
@@ -396,6 +409,11 @@
   transition: background 0.15s;
 }
 
+.modal-qty-ctrl .qty-btn:first-child {
+  border-left: 0;
+  border-right: 1px solid #e8e6df;
+}
+
 .qty-btn:hover { background: rgba(255,255,255,0.1); }
 
 .modal-atc-btn {
@@ -426,6 +444,13 @@
   }
 
   .modal-left { width: 100%; max-width: 260px; align-self: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop,
+  .modal {
+    transition: none;
+  }
 }
 
 .cart-icon-wrap {

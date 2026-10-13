@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 <head>
   <title>addictech – Admin: Users</title>
-  <link rel="stylesheet" href="<?= base_url('/public/css/admin_users.css') ?>" />
+  <link rel="stylesheet" href="<?= base_url('/public/css/admin_users.css') ?>?v=<?= filemtime(FCPATH . 'public/css/admin_users.css') ?>" />
 </head>
 <body>
 

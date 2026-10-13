@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 <head>
   <title>addictech – Messages</title>
-  <link rel="stylesheet" href="<?= base_url('/public/css/admin_contacts.css') ?>" />
+  <link rel="stylesheet" href="<?= base_url('/public/css/admin_contacts.css') ?>?v=<?= filemtime(FCPATH . 'public/css/admin_contacts.css') ?>" />
 </head>
 <body>
 
@@ -174,13 +174,13 @@
       modalMessage.innerHTML = message.replace(/\n/g, '<br>').replace(/\r/g, '');
       
       // Show modal
-      modal.style.display = 'block';
+      modal.classList.add('open');
       document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
     }
 
     // Function to close modal
     function closeModal() {
-      modal.style.display = 'none';
+      modal.classList.remove('open');
       document.body.style.overflow = ''; // Restore scrolling
     }
 
@@ -199,7 +199,7 @@
 
     // Close modal with Escape key
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && modal.style.display === 'block') {
+      if (event.key === 'Escape' && modal.classList.contains('open')) {
         closeModal();
       }
     });
