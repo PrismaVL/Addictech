@@ -17,7 +17,7 @@
   </div>
 
   <?php if ($loginError && $loginError !== 'Please login first.') : ?>
-    <div class="flash flash-error">
+    <div class="flash flash-error" role="alert" aria-live="assertive">
       <?= esc($loginError) ?>
     </div>
   <?php endif; ?>
@@ -51,7 +51,7 @@
         </div>
 
         <?php if (!empty($error)): ?>
-          <p class="auth-error"><?= htmlspecialchars($error) ?></p>
+          <p class="auth-error" role="alert" aria-live="assertive"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
       </div>
 

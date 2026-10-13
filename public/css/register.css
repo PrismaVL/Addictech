@@ -67,9 +67,15 @@ body {
 }
 
 .flash-error {
-  background: #f8d7da;
-  border: 1px solid #f5c6cb;
-  color: #721c24;
+  background: #fff0ef;
+  border: 2px solid #1a1a18;
+  border-left: 8px solid #b42318;
+  box-shadow: 0 5px 16px rgba(26, 26, 24, 0.12);
+  color: #8f1d14;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  padding: 1rem 1.25rem;
 }
 
 .flash-success {
@@ -189,17 +195,20 @@ body {
 }
 
 .field-error {
-  position: absolute;
-  top: calc(100% + 0.2rem);
-  left: 0;
-  z-index: 1;
+  position: relative;
   max-width: 100%;
-  margin: 0;
-  color: #c0392b;
+  margin: 0.1rem 0 0;
+  padding: 0.7rem 0.85rem;
+  border: 2px solid #1a1a18;
+  border-left: 6px solid #b42318;
+  background: #fff0ef;
+  box-shadow: 0 3px 10px rgba(26, 26, 24, 0.1);
+  color: #8f1d14;
   font-family: var(--font-body);
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
-  line-height: 1.2;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.45;
 }
 
 .field-error[hidden] {

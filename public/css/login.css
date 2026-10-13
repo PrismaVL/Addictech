@@ -55,6 +55,35 @@ body {
   color: var(--text);
 }
 
+.flash-error,
+.auth-error {
+  background: #fff0ef;
+  border: 2px solid #1a1a18;
+  border-left: 8px solid #b42318;
+  box-shadow: 0 5px 16px rgba(26, 26, 24, 0.12);
+  color: #8f1d14;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.5;
+}
+
+.flash-error {
+  max-width: 620px;
+  margin: 0 auto 1.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: 3px;
+}
+
+.auth-error {
+  padding: 0.9rem 1rem;
+}
+
+@media (max-width: 600px) {
+  .flash-error { margin-right: 1rem; margin-left: 1rem; }
+}
+
 .login-required-notification {
   position: fixed;
   right: 1.5rem;
