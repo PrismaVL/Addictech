@@ -35,41 +35,47 @@ $products_json = json_encode(array_map(function($p) {
     </div>
   <?php endif; ?>
  
-  <div class="wishlist-header">
- 
-    <!-- TOP ROW: title + search -->
-    <div class="wishlist-header-top">
-      <h1 class="wishlist-title">MY WISHLIST</h1>
-      <div class="search-wrap">
-        <input type="text" class="search-input" placeholder="SEARCH" id="searchInput" />
-        <button class="search-icon-btn" aria-label="Search">
+  <header class="catalog-header">
+    <div class="catalog-heading-row">
+      <div>
+        <p class="catalog-eyebrow">Your saved picks</p>
+        <h1 class="wishlist-title">MY WISHLIST</h1>
+      </div>
+      <label class="search-wrap" for="searchInput">
+        <input type="search" class="search-input" placeholder="SEARCH WISHLIST" id="searchInput" autocomplete="off" />
+        <span class="search-icon-btn" aria-hidden="true">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
             <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
           </svg>
-        </button>
+        </span>
+      </label>
+    </div>
+    <div class="catalog-toolbar">
+      <div class="filter-tags" role="group" aria-label="Filter wishlist by category">
+        <button type="button" class="tag active" data-filter="all" aria-pressed="true">ALL</button>
+        <button type="button" class="tag" data-filter="KEYBOARD" aria-pressed="false">KEYBOARD</button>
+        <button type="button" class="tag" data-filter="MOUSE" aria-pressed="false">MOUSE</button>
+        <button type="button" class="tag" data-filter="HEADSET" aria-pressed="false">HEADSET</button>
+        <button type="button" class="tag" data-filter="MONITOR" aria-pressed="false">MONITOR</button>
+        <button type="button" class="tag" data-filter="SPEAKER" aria-pressed="false">SPEAKER</button>
+        <button type="button" class="tag" data-filter="cam" aria-pressed="false">WEB CAM</button>
       </div>
+      <button type="button" class="tag sort-btn" id="sortBtn" data-sort="random" aria-label="Default product order">DEFAULT</button>
     </div>
- 
-    <!-- BOTTOM ROW: filter tags -->
-    <div class="filter-tags">
-      <button class="tag active" data-filter="all">ALL</button>
-      <button class="tag" data-filter="KEYBOARD">KEYBOARD</button>
-      <button class="tag" data-filter="MOUSE">MOUSE</button>
-      <button class="tag" data-filter="HEADSET">HEADSET</button>
-      <button class="tag" data-filter="MONITOR">MONITOR</button>
-      <button class="tag" data-filter="SPEAKER">SPEAKER</button>
-      <button class="tag" data-filter="cam">WEB CAM</button>
+    <div class="catalog-results-summary" role="status" aria-live="polite">
+      <p id="wishlistResultCount">Showing <strong><?= count($products) ?></strong> of <strong><?= count($products) ?></strong> products</p>
+      <p class="catalog-current-filter">Category: <strong id="wishlistCurrentCategory">All products</strong></p>
     </div>
- 
-  </div>
- 
-  <div class="product-grid">
+  </header>
+
+  <div class="product-grid" id="productGrid">
     <?php if (!empty($products)) : ?>
       <?php foreach ($products as $p) : ?>
         <div class="product-card"
              data-id="<?= $p['id'] ?>"
              data-name="<?= esc(strtolower($p['name'])) ?>"
-             data-category="<?= esc($p['category']) ?>">
+             data-category="<?= esc($p['category']) ?>"
+             data-price="<?= esc($p['price']) ?>">
           <div class="product-img">
             <?php if (!empty($p['image'])): ?>
               <img src="<?= base_url('public/images/products/' . $p['image']) ?>"
@@ -83,7 +89,7 @@ $products_json = json_encode(array_map(function($p) {
               </svg>
             <?php endif; ?>
 
-            <button type="button" class="card-wish-btn" data-id="<?= $p['id'] ?>">
+            <button type="button" class="card-wish-btn" data-id="<?= $p['id'] ?>" aria-label="Remove <?= esc($p['name']) ?> from wishlist">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="#e05252" stroke="#e05252" stroke-width="1.8">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
               </svg>
@@ -96,13 +102,13 @@ $products_json = json_encode(array_map(function($p) {
         </div>
       <?php endforeach; ?>
     <?php else : ?>
-      <div class="wishlist-empty">
+      <div class="catalog-empty wishlist-empty">
         Your wishlist is empty.
         <a href="<?= base_url('catalog') ?>">Browse the catalog →</a>
       </div>
     <?php endif; ?>
   </div>
- 
+  <p class="catalog-filter-empty" id="wishlistFilterEmpty" hidden>No saved products match your search or selected category.</p>
 </main>
  
 <!-- MODAL -->
@@ -196,6 +202,6 @@ $products_json = json_encode(array_map(function($p) {
     return Promise.resolve(false);
   }
 </script>
-<script src="<?= base_url('/public/js/wishlist.js') ?>"></script>
+<script src="<?= base_url('/public/js/wishlist.js') ?>?v=<?= filemtime(FCPATH . 'public/js/wishlist.js') ?>"></script>
  
 <?= $this->endSection() ?>
