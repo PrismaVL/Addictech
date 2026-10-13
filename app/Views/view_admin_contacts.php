@@ -3,6 +3,7 @@
 <head>
   <title>addictech – Messages</title>
   <link rel="stylesheet" href="<?= base_url('/public/css/admin_contacts.css') ?>?v=<?= filemtime(FCPATH . 'public/css/admin_contacts.css') ?>" />
+  <link rel="stylesheet" href="<?= base_url('/public/css/admin_dashboard.css') ?>?v=<?= filemtime(FCPATH . 'public/css/admin_dashboard.css') ?>" />
 </head>
 <body>
 
@@ -103,6 +104,7 @@
     <aside class="sidebar-nav">
       <nav>
         <ul>
+          <li><a href="<?= base_url('admin/dashboard') ?>">OVERVIEW</a></li>
           <li><a href="<?= base_url('admin/contacts') ?>" class="active">CONCERNS</a></li>
           <li><a href="<?= base_url('admin/products') ?>">PRODUCTS</a></li>
           <li><a href="<?= base_url('admin/orders') ?>">ORDERS</a></li>

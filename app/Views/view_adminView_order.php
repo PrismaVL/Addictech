@@ -141,6 +141,7 @@
     <aside class="sidebar-nav">
       <nav>
         <ul>
+          <li><a href="<?= base_url('admin/dashboard') ?>">OVERVIEW</a></li>
           <li><a href="<?= base_url('admin/products') ?>">PRODUCTS</a></li>
           <li><a href="<?= base_url('admin/orders') ?>" class="active">ORDERS</a></li>
           <li><a href="<?= base_url('admin/users') ?>">USERS</a></li>
