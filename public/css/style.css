@@ -119,6 +119,24 @@ body {
 
 .icon-btn:hover { opacity: 0.6; }
 
+footer ul a {
+  color: #555550 !important;
+  transition: color 0.2s ease;
+}
+
+footer ul a:hover {
+  color: #000 !important;
+}
+
+footer .footer-email {
+  color: #555550 !important;
+  transition: color 0.2s ease;
+}
+
+footer .footer-email:hover {
+  color: #000 !important;
+}
+
 /* ── PAGE TITLE BAR ── */
 .page-title-bar {
   padding: 2.8rem 2rem 2.2rem;

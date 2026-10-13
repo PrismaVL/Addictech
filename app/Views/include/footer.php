@@ -2,8 +2,8 @@
     <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px;">
         
         <div style="flex: 1; min-width: 250px;">
-            <h2 style="color: #1a1a18; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; font-family: 'Outfit', sans-serif;">ADDICTECH</h2>
-            <p style="color: #3a3a3a; font-size: 14px; margin-bottom: 10px;">addictechthebest@gmail.com</p>
+            <h2 style="color: #1a1a18; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; font-family: 'Outfit', sans-serif; -webkit-user-select: none; user-select: none;">ADDICTECH</h2>
+            <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=addictechthebest%40gmail.com" target="_blank" rel="noopener noreferrer" class="footer-email" style="display: inline-block; text-decoration: none; font-size: 14px; margin-bottom: 10px;">addictechthebest@gmail.com</a>
             <div style="display: flex; gap: 15px; margin-top: 20px;">
         <a href="#" class="contact-social" aria-label="Facebook" style="color: #1a1a18;">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
@@ -26,7 +26,7 @@
         </div>
 
         <div style="flex: 1; min-width: 150px;">
-            <h4 style="color: #1a1a18; margin-bottom: 15px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; font-family: 'Outfit', sans-serif;">Quick Links</h4>
+            <h4 style="color: #1a1a18; margin-bottom: 15px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; font-family: 'Outfit', sans-serif; -webkit-user-select: none; user-select: none;">Quick Links</h4>
             <ul style="list-style: none; padding: 0; margin: 0; line-height: 2;">
                 <li><a href="<?= base_url('home') ?>" style="color: #3a3a3a; text-decoration: none; font-size: 14px;">Home</a></li>
                 <li><a href="<?= base_url('catalog') ?>" style="color: #3a3a3a; text-decoration: none; font-size: 14px;">Catalog</a></li>
@@ -37,7 +37,7 @@
         </div>
 
         <div style="flex: 1; min-width: 150px;">
-            <h4 style="color: #1a1a18; margin-bottom: 15px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; font-family: 'Outfit', sans-serif;">Customer Care</h4>
+            <h4 style="color: #1a1a18; margin-bottom: 15px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; font-family: 'Outfit', sans-serif; -webkit-user-select: none; user-select: none;">Customer Care</h4>
             <ul style="list-style: none; padding: 0; margin: 0; line-height: 2;">
                 <li><a href="<?= base_url('about') ?>" style="color: #3a3a3a; text-decoration: none; font-size: 14px;">About Us</a></li>
                 <li><a href="<?= base_url('home#contact-section') ?>" id="contact-link" style="color: #3a3a3a; text-decoration: none; font-size: 14px;">Contact Us</a></li>
