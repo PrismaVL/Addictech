@@ -40,7 +40,7 @@ function nav_class(string $page, string $active): string {
     
     <!-- Admin-only links - only shown if user is logged in AND has role 'admin' -->
     <?php if ($isLoggedIn && $userRole === 'admin'): ?>
-      <a href="<?= base_url('admin/users') ?>" class="<?= nav_class('users', $nav_active) ?>">ADMIN DASHBOARD</a>
+      <a href="<?= base_url('admin/dashboard') ?>" class="<?= nav_class('dashboard', $nav_active) ?>">ADMIN DASHBOARD</a>
     <?php endif; ?>
 
     <!-- MOBILE ONLY ACTION LINKS -->

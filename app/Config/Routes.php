@@ -13,6 +13,7 @@ $routes->get('catalog', 'Home::viewcatalog'); //view
 $routes->get('wishlist', 'Home::viewwishlist');
 $routes->get('about', 'Home::viewabout');
 
+$routes->get('admin/dashboard', 'Dashboard::index');
 $routes->get('admin/users', 'Users::index');
 $routes->get('admin/products', 'Products::index');
 $routes->get('admin/orders', 'Orders::adminIndex');
@@ -111,4 +112,3 @@ $routes->post('contact/send',              'Contact::send');
 $routes->get('admin/contacts',             'Contact::adminIndex');
 $routes->get('admin/contacts/read/(:num)', 'Contact::markRead/$1');
 $routes->get('admin/contacts/delete/(:num)', 'Contact::delete/$1');
-
