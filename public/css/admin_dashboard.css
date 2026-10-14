@@ -124,6 +124,129 @@
   background: rgba(255, 255, 255, 0.42);
 }
 
+.admin-list-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.85rem;
+  border: 1px solid #d2cec2;
+  background: #f0ece2;
+}
+
+.admin-search-field {
+  flex: 1 1 20rem;
+  min-width: 0;
+}
+
+.admin-search-field input {
+  display: block;
+  width: 100%;
+  min-height: 42px;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid #c8c3b5;
+  border-radius: 0;
+  background: #faf8f2;
+  color: #1a1a18;
+  font: inherit;
+  font-size: 0.88rem;
+}
+
+.admin-search-field input:focus {
+  border-color: #1a1a18;
+  outline: 2px solid rgba(26, 26, 24, 0.14);
+  outline-offset: 1px;
+}
+
+.admin-search-button,
+.admin-search-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0.65rem 0.95rem;
+  border: 1px solid #1a1a18;
+  background: #1a1a18;
+  color: #f0ece2;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.admin-search-button:hover {
+  background: #3a3934;
+}
+
+.admin-search-clear {
+  background: transparent;
+  color: #1a1a18;
+}
+
+.admin-search-clear:hover {
+  background: #e8e4da;
+}
+
+.admin-list-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 48px;
+}
+
+.admin-list-footer > p {
+  margin: 0;
+  color: #77746b;
+  font-size: 0.76rem;
+}
+
+.admin-pagination nav {
+  margin: 0;
+}
+
+.admin-pagination .pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-pagination .pagination a {
+  display: inline-flex;
+  min-width: 36px;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid #d2cec2;
+  background: #f0ece2;
+  color: #38362f;
+  font-size: 0.78rem;
+  text-decoration: none;
+}
+
+.admin-pagination .pagination a:hover,
+.admin-pagination .pagination li.active a {
+  border-color: #1a1a18;
+  background: #1a1a18;
+  color: #f0ece2;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
 @media (max-width: 900px) {
   .products-page,
   .orders-page,
@@ -180,6 +303,19 @@
   .orders-table,
   .contacts-table {
     min-width: 700px;
+  }
+
+  .admin-list-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .admin-search-field {
+    flex-basis: 100%;
+  }
+
+  .admin-list-footer {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 

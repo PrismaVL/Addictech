@@ -41,8 +41,24 @@ class Contact extends BaseController
     public function adminIndex()
     {
         $contactModel = model('Contacts_model');
+        $search = trim((string) $this->request->getGet('q'));
+        $search = substr($search, 0, 100);
+
+        if ($search !== '') {
+            $contactModel->groupStart()
+                ->like('full_name', $search)
+                ->orLike('email', $search)
+                ->orLike('concern', $search);
+            if (ctype_digit($search)) {
+                $contactModel->orWhere('id', (int) $search);
+            }
+            $contactModel->groupEnd();
+        }
+
         return view('view_admin_contacts', [
-            'contacts' => $contactModel->getAll()
+            'contacts' => $contactModel->orderBy('created_at', 'DESC')->paginate(10),
+            'pager' => $contactModel->pager,
+            'search' => $search,
         ]);
     }
 

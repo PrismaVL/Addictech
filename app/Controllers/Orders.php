@@ -273,8 +273,70 @@ public function placeOrder()
         //     return redirect()->to('login');
         // }
 
+        $perPage = 10;
+        $page = max(1, (int) ($this->request->getGet('page') ?? 1));
+        $search = trim((string) $this->request->getGet('q'));
+        $search = substr($search, 0, 100);
+
+        $countModel = model('Orders_model');
+        $countModel->join('users', 'users.id = orders.user_id', 'left');
+        if ($search !== '') {
+            $countModel->groupStart()
+                ->like('orders.order_number', $search)
+                ->orLike('users.first_name', $search)
+                ->orLike('users.last_name', $search)
+                ->orLike('users.email', $search)
+                ->orLike('orders.status', $search)
+                ->orLike('orders.payment_status', $search);
+            if (ctype_digit($search)) {
+                $countModel->orWhere('orders.id', (int) $search);
+            }
+            $countModel->groupEnd();
+        }
+        $total = $countModel->countAllResults();
+
         $ordersModel = model('Orders_model');
-        $data['orders'] = $ordersModel->getAllWithUser();
+        $ordersModel->select('
+                orders.id,
+                orders.total,
+                orders.order_number,
+                orders.status,
+                orders.created_at,
+                CONCAT(users.first_name, " ", users.last_name) AS username,
+                users.email,
+                MIN(order_items.product_name) AS product_name,
+                MIN(order_items.variant) AS variant,
+                MIN(products.image) AS product_image,
+                SUM(order_items.quantity) AS total_quantity
+            ')
+            ->join('users', 'users.id = orders.user_id', 'left')
+            ->join('order_items', 'order_items.order_id = orders.id', 'left')
+            ->join('products', 'products.id = order_items.product_id', 'left');
+        if ($search !== '') {
+            $ordersModel->groupStart()
+                ->like('orders.order_number', $search)
+                ->orLike('users.first_name', $search)
+                ->orLike('users.last_name', $search)
+                ->orLike('users.email', $search)
+                ->orLike('orders.status', $search)
+                ->orLike('orders.payment_status', $search);
+            if (ctype_digit($search)) {
+                $ordersModel->orWhere('orders.id', (int) $search);
+            }
+            $ordersModel->groupEnd();
+        }
+        $orders = $ordersModel->groupBy('orders.id')
+            ->orderBy('orders.created_at', 'DESC')
+            ->findAll($perPage, ($page - 1) * $perPage);
+
+        $pager = service('pager');
+        $pager->store('default', $page, $perPage, $total);
+
+        $data = [
+            'orders' => $orders,
+            'pager' => $pager,
+            'search' => $search,
+        ];
         return view('view_admin_order', $data);
     }
 

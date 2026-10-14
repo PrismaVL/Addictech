@@ -14,9 +14,28 @@ class Products extends BaseController
         // }
 
         $productModel = new Products_Model();
+        $search = trim((string) $this->request->getGet('q'));
+        $search = substr($search, 0, 100);
+
+        if ($search !== '') {
+            $productModel->groupStart()
+                ->like('name', $search)
+                ->orLike('variant', $search)
+                ->orLike('category', $search)
+                ->orLike('description', $search)
+                ->orLike('status', $search);
+
+            if (ctype_digit($search)) {
+                $productModel->orWhere('id', (int) $search);
+            }
+            $productModel->groupEnd();
+        }
+
         $data = [
             'title' => 'Product Management',
-            'products' => $productModel->findAll()
+            'products' => $productModel->orderBy('id', 'ASC')->paginate(10),
+            'pager' => $productModel->pager,
+            'search' => $search,
         ];
 
         return view('view_admin_product', $data);

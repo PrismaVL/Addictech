@@ -13,11 +13,30 @@ class Users extends BaseController
         // }
 
         $usermodel = model('Users_model');
+        $search = trim((string) $this->request->getGet('q'));
+        $search = substr($search, 0, 100);
 
-        $data = array(
+        if ($search !== '') {
+            $usermodel->groupStart()
+                ->like('first_name', $search)
+                ->orLike('last_name', $search)
+                ->orLike('email', $search)
+                ->orLike('role', $search)
+                ->orLike('status', $search)
+                ->orLike('address', $search)
+                ->orLike('city', $search);
+            if (ctype_digit($search)) {
+                $usermodel->orWhere('id', (int) $search);
+            }
+            $usermodel->groupEnd();
+        }
+
+        $data = [
             'title' => 'TW32 App - View User Record',
-            'users' => $usermodel->findAll()
-        );
+            'users' => $usermodel->orderBy('id', 'ASC')->paginate(10),
+            'pager' => $usermodel->pager,
+            'search' => $search,
+        ];
 
         return view('view_admin_user', $data);
     }

@@ -30,6 +30,15 @@
         </div>
       <?php endif; ?>
 
+      <form class="admin-list-toolbar" method="get" action="<?= base_url('admin/products') ?>" role="search">
+        <label class="admin-search-field">
+          <span class="sr-only">Search products</span>
+          <input type="search" name="q" value="<?= esc($search) ?>" placeholder="Search product, type, description, or status" />
+        </label>
+        <button type="submit" class="admin-search-button">SEARCH</button>
+        <?php if ($search !== ''): ?><a class="admin-search-clear" href="<?= base_url('admin/products') ?>">CLEAR</a><?php endif; ?>
+      </form>
+
       <!-- Products Table -->
       <div class="products-table-wrapper">
         <table class="products-table">
@@ -75,11 +84,18 @@
               <?php endforeach; ?>
             <?php else: ?>
               <tr>
-                <td colspan="7" class="empty-row">No products found</td>
+                <td colspan="7" class="empty-row"><?= $search !== '' ? 'No products match your search.' : 'No products found' ?></td>
               </tr>
             <?php endif; ?>
           </tbody>
         </table>
+      </div>
+
+      <div class="admin-list-footer">
+        <p>Showing <?= esc($pager->getDetails()['from'] ?? 0) ?>–<?= esc($pager->getDetails()['to'] ?? 0) ?> of <?= esc($pager->getDetails()['total'] ?? 0) ?> products</p>
+        <?php if ($pager->getPageCount() > 1): ?>
+          <div class="admin-pagination"><?= $pager->only(['q'])->links('default') ?></div>
+        <?php endif; ?>
       </div>
     </div>
 

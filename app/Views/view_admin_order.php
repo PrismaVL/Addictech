@@ -29,6 +29,15 @@
         </div>
       <?php endif; ?>
 
+      <form class="admin-list-toolbar" method="get" action="<?= base_url('admin/orders') ?>" role="search">
+        <label class="admin-search-field">
+          <span class="sr-only">Search orders</span>
+          <input type="search" name="q" value="<?= esc($search) ?>" placeholder="Search order number, customer, or status" />
+        </label>
+        <button type="submit" class="admin-search-button">SEARCH</button>
+        <?php if ($search !== ''): ?><a class="admin-search-clear" href="<?= base_url('admin/orders') ?>">CLEAR</a><?php endif; ?>
+      </form>
+
       <!-- Orders Table -->
       <div class="orders-table-wrapper">
         <table class="orders-table">
@@ -62,11 +71,18 @@
               <?php endforeach; ?>
             <?php else: ?>
               <tr>
-                <td colspan="7" class="empty-row">No orders found</td>
+                <td colspan="6" class="empty-row"><?= $search !== '' ? 'No orders match your search.' : 'No orders found' ?></td>
               </tr>
             <?php endif; ?>
           </tbody>
         </table>
+      </div>
+
+      <div class="admin-list-footer">
+        <p>Showing <?= esc($pager->getDetails()['from'] ?? 0) ?>–<?= esc($pager->getDetails()['to'] ?? 0) ?> of <?= esc($pager->getDetails()['total'] ?? 0) ?> orders</p>
+        <?php if ($pager->getPageCount() > 1): ?>
+          <div class="admin-pagination"><?= $pager->only(['q'])->links('default') ?></div>
+        <?php endif; ?>
       </div>
     </div>
 
